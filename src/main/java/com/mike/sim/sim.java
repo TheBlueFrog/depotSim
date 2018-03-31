@@ -57,16 +57,17 @@ public class sim {
 
     public static void main(String [ ] args) {
 
-        for(int maxStops = 1; maxStops < 40; maxStops += 5) {
+        for(int maxOrders = 100; maxOrders < 400; maxOrders += 50) {
             for (int i = 0; i < maxScenarios; ++i) {
+                Order.allOrders.clear();
                 suppliers = initSuppliers(i);
                 consumers = initConsumers(i);
                 depots = initDepots(i);
             }
 
-            Log.d(TAG, String.format("<<<<<<<<< maxStops %4d ", maxStops));
+            Log.d(TAG, String.format("<<<<<<<<< maxStops %4d ", maxOrders));
 
-            deliver(maxStops);
+            deliver(maxOrders);
         }
     }
 
@@ -83,7 +84,7 @@ public class sim {
      * the total length of the route to deliver is an upper limit
      *
      */
-    private static void deliver(int maxStops) {
+    private static void deliver(int maxOrders) {
 
         // serialize all the orders, simpler than hunting
         List<Order> orders = new ArrayList<>(Order.allOrders);
@@ -96,12 +97,13 @@ public class sim {
 
         // form batches and deliver
         while(orders.size() > 0) {
-            Batch batch = new Batch(orders, maxStops);
+            Batch batch = new Batch(orders, maxOrders);
             batch.deliver();
         }
     }
 
     private static List<Consumer> initConsumers(int scenario) {
+
         List<Consumer> consumers = new ArrayList<>();
         switch (scenario) {
             case 0:

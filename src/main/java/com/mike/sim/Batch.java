@@ -22,10 +22,10 @@ public class Batch {
     private AnnealData annealer;
 
     /** given open orders carve off a batch */
-    public Batch(List<Order> orders, int maxStops) {
+    public Batch(List<Order> orders, int maxOrders) {
         id = nextId++;
 
-        while(this.orders.size() < maxStops) {
+        while((orders.size() > 0) && (this.orders.size() < maxOrders)) {
             Order order = orders.remove(0);
             this.orders.add(order);
         }

@@ -200,7 +200,7 @@ public class Route {
     static private int getAnotherMovable(List<Stop> stops, int j) {
         int i = random.nextInt(stops.size());
         while (    (stops.get(i).isUnrouteable())
-                && (i != j)) {
+                || (i == j)) {
             i = random.nextInt(stops.size());
         }
         return i;

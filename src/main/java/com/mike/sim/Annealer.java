@@ -1,6 +1,8 @@
 package com.mike.sim;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -109,9 +111,32 @@ public class Annealer {
         }
 
         // verify both ends are still non-routeable
-        if ( ! ( ! data.getStops().get(0).isRouteable()) &&
-               ( ! data.getStops().get(data.getStops().size()-1).isRouteable())) {
+        if ( ! ( ! best.getStops().get(0).isRouteable()) &&
+               ( ! best.getStops().get(data.getStops().size()-1).isRouteable())) {
             Log.d(TAG, "Oops");
+        }
+
+        // verify we never visit one place more than once
+        {
+            // collapse runs into a single stop
+            ArrayList<Stop> x = new ArrayList<>(best.getStops());
+            for(int i = 1; i < x.size(); ) {
+                if (x.get(i-1).distance(x.get(i)) < 0.1) {
+                    x.remove(i);
+                }
+                else
+                    ++i;
+            }
+
+
+            boolean[] visited = new boolean[x.size()];
+            Arrays.fill(visited, false);
+            for(int i = 0; i < x.size(); ++i) {
+                for(int j = 0; j < i; ++j) {
+                    if (x.get(i).distance(x.get(j)) < 0.1)
+                        Log.d(TAG, "oops");
+                }
+            }
         }
         return best;
     }
