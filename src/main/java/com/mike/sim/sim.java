@@ -49,7 +49,7 @@ public class sim {
     private static final String TAG = sim.class.getSimpleName();
     private static Random random = new Random(12737L);
 
-    private static int maxScenarios = 1;
+    private static int maxScenarios = 2;
 
     private static List<Consumer> consumers;
     private static List<Supplier> suppliers;
@@ -59,15 +59,14 @@ public class sim {
 
         for(int maxOrders = 100; maxOrders < 400; maxOrders += 50) {
             for (int i = 0; i < maxScenarios; ++i) {
-                Order.allOrders.clear();
-                suppliers = initSuppliers(i);
-                consumers = initConsumers(i);
+                suppliers = Supplier.initSuppliers(i);
+                consumers = Consumer.initConsumers(i, suppliers);
                 depots = initDepots(i);
+
+                Log.d(TAG, String.format("<<<<<<<<< maxStops %4d ", maxOrders));
+
+                deliver(maxOrders);
             }
-
-            Log.d(TAG, String.format("<<<<<<<<< maxStops %4d ", maxOrders));
-
-            deliver(maxOrders);
         }
     }
 
@@ -100,44 +99,6 @@ public class sim {
             Batch batch = new Batch(orders, maxOrders);
             batch.deliver();
         }
-    }
-
-    private static List<Consumer> initConsumers(int scenario) {
-
-        List<Consumer> consumers = new ArrayList<>();
-        switch (scenario) {
-            case 0:
-                consumers.add(
-                        new Consumer(scenario,
-                                new Location(-2, 0),
-                                suppliers));
-                consumers.add(
-                        new Consumer(scenario,
-                                new Location(0, 2),
-                                suppliers));
-                consumers.add(
-                        new Consumer(scenario,
-                                new Location(2, 0),
-                                suppliers));
-                consumers.add(
-                        new Consumer(scenario,
-                                new Location(0, -2),
-                                suppliers));
-                break;
-        }
-        return consumers;
-    }
-
-    private static List<Supplier> initSuppliers(int scenario) {
-        List<Supplier> suppliers = new ArrayList<>();
-        switch (scenario) {
-            case 0:
-                suppliers.add(
-                        new Supplier(
-                                new Location(-7, 0)));
-                break;
-        }
-        return suppliers;
     }
 
     private static List<Depot> initDepots(int scenario) {

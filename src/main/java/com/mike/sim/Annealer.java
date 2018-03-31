@@ -134,7 +134,7 @@ public class Annealer {
             for(int i = 0; i < x.size(); ++i) {
                 for(int j = 0; j < i; ++j) {
                     if (x.get(i).distance(x.get(j)) < 0.1)
-                        Log.d(TAG, "oops");
+                        Log.d(TAG, "oops, stop visited more than once");
                 }
             }
         }
