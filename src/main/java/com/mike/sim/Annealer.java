@@ -3,6 +3,7 @@ package com.mike.sim;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -13,7 +14,7 @@ public class Annealer {
 
     private static final String TAG = Annealer.class.getSimpleName();
 
-    private boolean debug = false;
+//    private boolean debug = false;
     private final AnnealData data;
 
     public Annealer(AnnealData data)  {
@@ -54,7 +55,7 @@ public class Annealer {
         }
 
         if (data.debug())
-            Log.d(TAG, String.format("Initial solution cost: %.1f", route.getMetrics().getCost()));
+            Log.d(TAG, String.format("Initial solution: %.1f", route.getMetrics().getCost()));
 
         double temperature = 10000;
 //        double coolingRate = 0.003;
@@ -66,6 +67,9 @@ public class Annealer {
         if (data.debug())
             Log.d(TAG, "Initial route: " + best.toString());
 
+        List<Double> costs = new ArrayList<>();
+        costs.add(route.getMetrics().getCost());
+
         // iterate until system has cooled
         while (temperature > 1) {
             Route next = new Route(route);
@@ -75,6 +79,9 @@ public class Annealer {
             if (next.hasErrors())
                 return best;
 
+            costs.add(next.getMetrics().getCost());
+
+            // Decide if we should accept the neighbour
             double p = acceptanceProbability(
                     route.getMetrics().getCost(),
                     next.getMetrics().getCost(),
@@ -84,9 +91,9 @@ public class Annealer {
                 route = new Route(next);
             }
 
+            // Keep track of the best solution found
             if (route.getMetrics().getCost() < best.getMetrics().getCost()) {
-
-                if (debug)
+                if (data.debug())
                     Log.d(TAG, "new best " + route.toString());
 
                 best = new Route(route);
@@ -110,11 +117,11 @@ public class Annealer {
             Log.d(TAG, "Route: " + best.toString());
         }
 
-        // verify both ends are still non-routeable
-        if ( ! ( ! best.getStops().get(0).isRouteable()) &&
-               ( ! best.getStops().get(data.getStops().size()-1).isRouteable())) {
-            Log.d(TAG, "Oops");
-        }
+//        // verify both ends are still non-routeable
+//        if ( ! ( ! best.getStops().get(0).isRouteable()) &&
+//               ( ! best.getStops().get(data.getStops().size()-1).isRouteable())) {
+//            Log.d(TAG, "Oops");
+//        }
 
         // verify we never visit one place more than once
         {
@@ -128,7 +135,6 @@ public class Annealer {
                     ++i;
             }
 
-
             boolean[] visited = new boolean[x.size()];
             Arrays.fill(visited, false);
             for(int i = 0; i < x.size(); ++i) {
@@ -138,7 +144,12 @@ public class Annealer {
                 }
             }
         }
+
+        StringBuilder sb = new StringBuilder();
+        for(double d : costs)
+            sb.append(String.format("%.1f ", d));
+        Log.d(TAG, String.format("Route solution %.1f %s", best.getMetrics().getCost(), sb.toString()));
+
         return best;
     }
 }
-

@@ -19,7 +19,7 @@ public class Stop extends LocatedObject {
 
     @Override
     public String toString() {
-        return location.toString();
+        return Integer.toString(getId()); // location.toString();
     }
 
     public Stop(Supplier supplier, List<Order> orders) {
@@ -43,10 +43,4 @@ public class Stop extends LocatedObject {
         return action.equals(Action.Delivery);
     }
 
-    public boolean isRouteable() {
-        return true;
-    }
-    public boolean isUnrouteable() {
-        return false;
-    }
 }

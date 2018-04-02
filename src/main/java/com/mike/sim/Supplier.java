@@ -18,6 +18,7 @@ public class Supplier extends LocatedObject{
                                 new Location(-7, 0)));
                 break;
             case 1:
+            case 2:
                 suppliers.add(
                         new Supplier(
                                 new Location(-7, 0)));

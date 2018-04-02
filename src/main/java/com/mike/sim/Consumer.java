@@ -55,6 +55,22 @@ public class Consumer extends LocatedObject {
                 }
             }
             break;
+            case 2: {
+                Location[] locs = new Location[]{
+                        new Location(-1, 0),
+                        new Location(0, 1),
+                        new Location(1, 0),
+                        new Location(0, -1),
+                };
+                for(int i = 1; i < 10; ++i) {
+                    for (Location loc : locs) {
+                        consumers.add(
+                                new Consumer(scenario,
+                                        new Location((i * loc.getX()) + 20, i * loc.getY()), suppliers));
+                    }
+                }
+            }
+            break;
         }
         return consumers;
     }

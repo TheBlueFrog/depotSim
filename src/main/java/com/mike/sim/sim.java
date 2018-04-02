@@ -47,9 +47,13 @@ import java.util.Random;
 public class sim {
 
     private static final String TAG = sim.class.getSimpleName();
-    private static Random random = new Random(12737L);
 
-    private static int maxScenarios = 2;
+    private static Random random = new Random(12737L);
+    public static Random getRandom() {
+        return random;
+    }
+
+    private static int maxScenarios = 3;
 
     private static List<Consumer> consumers;
     private static List<Supplier> suppliers;
@@ -57,36 +61,23 @@ public class sim {
 
     public static void main(String [ ] args) {
 
-        for(int maxOrders = 100; maxOrders < 400; maxOrders += 50) {
-            for (int i = 0; i < maxScenarios; ++i) {
-                suppliers = Supplier.initSuppliers(i);
-                consumers = Consumer.initConsumers(i, suppliers);
-                depots = initDepots(i);
+        for (int scenario = 2; scenario < maxScenarios; ++scenario) {
+            int maxOrders = 400;// maxOrders += 50) {
+                Log.d(TAG, String.format("<<<<<<<<< Secenario %d, orders %4d ", scenario, maxOrders));
 
-                Log.d(TAG, String.format("<<<<<<<<< maxStops %4d ", maxOrders));
+                suppliers = Supplier.initSuppliers(scenario);
+                consumers = Consumer.initConsumers(scenario, suppliers);
+                depots = initDepots(scenario);
 
-                deliver(maxOrders);
-            }
+
+                deliver(Order.allOrders, maxOrders);
+//            }
         }
     }
 
-    /**
-     * run the clock forward to trigger the orders the
-     * customers have setup.  as the orders accumulate they
-     * are formed into batches and delivered
-     *
-     * at one end of the spectrum as each order is triggered
-     * it is delivered
-     *
-     * batch sizes have a lower limit of one order,
-     * the number of stops in a batch is an upper limit
-     * the total length of the route to deliver is an upper limit
-     *
-     */
-    private static void deliver(int maxOrders) {
+    private static void deliver(List<Order> orders, int maxOrders) {
 
-        // serialize all the orders, simpler than hunting
-        List<Order> orders = new ArrayList<>(Order.allOrders);
+        // order the orders by time
         orders.sort(new Comparator<Order>() {
             @Override
             public int compare(Order o1, Order o2) {
@@ -111,7 +102,4 @@ public class sim {
         return depots;
     }
 
-    public static Random getRandom() {
-        return random;
-    }
 }

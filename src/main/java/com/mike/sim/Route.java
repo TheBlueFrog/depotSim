@@ -191,18 +191,43 @@ public class Route {
 
     static private int getMovable (List<Stop> stops) {
         int i = random.nextInt(stops.size());
-        while (stops.get(i).isUnrouteable()) {
-            i = random.nextInt(stops.size());
-        }
+//        while (stops.get(i).isUnrouteable()) {
+//            i = random.nextInt(stops.size());
+//        }
         return i;
     }
 
+
+    // experiment with both types of swapping, doesn't seem
+    // to make any difference, the Gaussian is probably
+    // slower
+
+    // 'near neighbor swap'
+
+//    // literature indicates we want a permutation that is
+//    // close to j
+//    static private int getAnotherMovable(List<Stop> stops, int j) {
+//        int ii;
+//        do {
+//            double displacement = random.nextGaussian() * (stops.size() / 2.0);
+//            long i = j + Math.round(displacement);
+//            if (i < 0)
+//                i = 0;
+//            if (i >= stops.size())
+//                i = stops.size() - 1;
+//            ii = (int) i;
+//        }
+//        while (ii == j);
+//
+//        return ii;
+//    }
+
+    // random swap
     static private int getAnotherMovable(List<Stop> stops, int j) {
         int i = random.nextInt(stops.size());
-        while (    (stops.get(i).isUnrouteable())
-                || (i == j)) {
+        while (i == j)
             i = random.nextInt(stops.size());
-        }
+
         return i;
     }
 

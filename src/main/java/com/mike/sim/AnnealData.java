@@ -33,7 +33,7 @@ public class AnnealData {
     }
 
     public boolean debug() {
-        return true;
+        return false;
     }
 
     public void anneal() {
