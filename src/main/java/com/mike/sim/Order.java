@@ -30,8 +30,10 @@ public class Order  {
         return ordersById.get(id);
     }
 
-    public static void sortOpenOrders() {
+    private static boolean openOrdersAreSorted = false;
 
+    public static void sortOpenOrders() {
+        openOrdersAreSorted = true;
         // order the orders by time
         openOrders.sort(new Comparator<Order>() {
             @Override
@@ -50,6 +52,9 @@ public class Order  {
     }
 
     public static List<Order> getBatch(int maxOrders) {
+        if ( ! openOrdersAreSorted)
+            sortOpenOrders();
+
         List<Order> od = new ArrayList<>();
         while((openOrders.size() > 0) && (od.size() < maxOrders)) {
             Order order = openOrders.remove(0);
@@ -93,6 +98,7 @@ public class Order  {
         this.supplier = supplier;
         this.consumer = consumer;
 
+        openOrdersAreSorted = false;
         openOrders.add(this);
         ordersById.put(this.id, this);
     }
