@@ -49,13 +49,14 @@ public class Annealer {
 
     public Route anneal() {
 
+        if (data.debug())
+            Log.d(TAG, String.format("Initial solution: %.1f", route.getMetrics().getCost()));
+
         if (3 > data.getStops().size()) {
-            Log.d(TAG, "No stops, nothing to optimize");
+            Log.d(TAG, "Less than 3 stops, nothing to optimize");
             return route;
         }
 
-        if (data.debug())
-            Log.d(TAG, String.format("Initial solution: %.1f", route.getMetrics().getCost()));
 
         double temperature = 10000;
 //        double coolingRate = 0.003;

@@ -1,21 +1,32 @@
 package com.mike.sim;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Stop extends LocatedObject {
 
-    private List<Order> orders;
+    static public enum Action {
+        Drop,
+        Pick,
+        Stop
+    };
+    private Action action;
 
+    public Action getAction() {
+        return action;
+    }
+
+    private List<Order> orders = new ArrayList<>();
     public List<Order> getOrders() {
         return orders;
     }
 
-    static public enum Action {
-        Delivery,
-        Pickup,
-        Stop
-    };
-    private Action action;
+    public boolean isPickup() {
+        return action.equals(Action.Pick);
+    }
+    public boolean isDelivery() {
+        return action.equals(Action.Drop);
+    }
 
     @Override
     public String toString() {
@@ -25,22 +36,23 @@ public class Stop extends LocatedObject {
     public Stop(Supplier supplier, List<Order> orders) {
         super(supplier.getLocation());
 
-        action = Action.Pickup;
-        this.orders = orders;
+        action = Action.Pick;
+        this.orders.addAll(orders);
     }
 
     public Stop(Consumer consumer, List<Order> orders) {
         super(consumer.getLocation());
 
-        action = Action.Delivery;
-        this.orders = orders;
+        action = Action.Drop;
+        this.orders.addAll(orders);
     }
 
-    public boolean isPickup() {
-        return action.equals(Action.Pickup);
-    }
-    public boolean isDelivery() {
-        return action.equals(Action.Delivery);
-    }
+//    public Stop(Consumer consumer, List<ConsumerOrder> consumerOrders) {
+//        super(consumer.getLocation());
+//
+//        action = Action.Drop;
+//        this.orders = consumerOrders;
+//    }
+
 
 }

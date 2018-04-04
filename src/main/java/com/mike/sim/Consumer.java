@@ -5,32 +5,22 @@ import java.util.List;
 
 public class Consumer extends LocatedObject {
 
-    private final OrderingSchedule orderingSchedule;
-
-    public List<Order> getOrders() {
-        return orderingSchedule.getOrders();
-    }
+    private OrderingSchedule orderingSchedule;
 
     public Consumer(int scenario, Location location, List<Supplier> suppliers) {
         super(location);
-
-        this.orderingSchedule = new OrderingSchedule(scenario, this, suppliers);
     }
 
-    static List<Consumer> initConsumers(int scenario, List<Supplier> suppliers) {
-
-        // the Order class hangs on to all the orders, for performance
-
-        Order.allOrders.clear();
+    static List<Consumer> setup(int scenario, List<Supplier> suppliers) {
 
         List<Consumer> consumers = new ArrayList<>();
         switch (scenario) {
             case 0: {
                 Location[] locs = new Location[]{
-                        new Location(-2, 0),
-                        new Location(0, 2),
-                        new Location(2, 0),
-                        new Location(0, -2),
+                        new Location( 8, 0),
+                        new Location(10, 2),
+                        new Location(12, 0),
+                        new Location(10, -2),
                 };
                 for (Location loc : locs) {
                     consumers.add(
@@ -74,5 +64,10 @@ public class Consumer extends LocatedObject {
         }
         return consumers;
     }
+
+    public void setupSchedule(int scenario, List<Supplier> suppliers) {
+        orderingSchedule = new OrderingSchedule(scenario, this, suppliers);
+    }
+
 
 }

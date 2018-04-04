@@ -154,9 +154,9 @@ public class Route {
         for (int i = toI + 1; i < stops.size(); ++i){
             Stop si = stops.get(i);
             if (si.isDelivery()) {
-                for (Order order : si.getOrders()) {
-                    for (Order otherOrder : from.getOrders()) {
-                        if (otherOrder.equals(order))
+                for (Order consumerOrder : si.getOrders()) {
+                    for (Order otherConsumerOrder : from.getOrders()) {
+                        if (otherConsumerOrder.equals(consumerOrder))
                             count++;
                     }
                 }
@@ -177,9 +177,9 @@ public class Route {
         for (int i = 0; i < toI; ++i){
             Stop pick = stops.get(i);
             if (pick.isPickup()) {
-                for (Order pickOrder : pick.getOrders()) {
-                    for (Order order : to.getOrders()) {
-                        if (order.equals(pickOrder))
+                for (Order pickConsumerOrder : pick.getOrders()) {
+                    for (Order consumerOrder : to.getOrders()) {
+                        if (consumerOrder.equals(pickConsumerOrder))
                             count++;
                     }
                 }
@@ -242,9 +242,9 @@ public class Route {
                 inTruck.addAll(stop.getOrders());
             }
             else if (stop.isDelivery()) {
-                for (Order order : stop.getOrders()) {
-                    if ( ! inTruck.remove(order)) {
-                        errors.add(new RouteError(RouteError.Type.DidNotPickFor, order.getConsumer()));
+                for (Order consumerOrder : stop.getOrders()) {
+                    if ( ! inTruck.remove(consumerOrder)) {
+                        errors.add(new RouteError(RouteError.Type.DidNotPickFor, consumerOrder.getConsumer()));
                     }
                 }
             }

@@ -9,7 +9,7 @@ public class Supplier extends LocatedObject{
         super(location);
     }
 
-    static List<Supplier> initSuppliers(int scenario) {
+    static List<Supplier> setup(int scenario) {
         List<Supplier> suppliers = new ArrayList<>();
         switch (scenario) {
             case 0:
