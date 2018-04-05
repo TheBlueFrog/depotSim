@@ -1,7 +1,7 @@
 package com.mike.sim;
 
 
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -71,22 +71,28 @@ public class sim {
                 for(Consumer consumer : consumers)
                     consumer.setupSchedule(scenario, suppliers);
 
-                deliver(maxOrders);
+                run(scenario, maxOrders);
 //            }
         }
     }
 
-    private static void deliver(int maxOrders) {
+    private static void run(int scenario, int maxOrders) {
 
         // form batches and process, no pro-active S->D
 
         while(Order.haveOpenOrders()) {
-            Batch batch = new Batch(maxOrders);
+            Batch batch = new Batch(scenario, maxOrders);
+
+            // simulate some amount of new orders from consumers
+            // which is sufficient to trigger setting up a delivery run
 
             ConsumerRun consumerRun = new ConsumerRun(batch);
 
-//            SupplierRun supplierRun = new SupplierRun(consumerRun);
+
+            SupplierRun supplierRun = new SupplierRun(batch);
 //            supplierRun.drop();
+
+            // deliver to the consumers
 
             consumerRun.deliver();
         }
@@ -101,12 +107,4 @@ public class sim {
         return depots.get(0);
     }
 
-    /**
-     * map the orders of a consumer run into supplier orders
-     * @param consumerRun
-     * @return
-     */
-    public static List<Order> getSupplierOrders(ConsumerRun consumerRun) {
-        return null;
-    }
 }

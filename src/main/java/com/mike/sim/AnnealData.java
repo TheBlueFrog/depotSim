@@ -13,9 +13,7 @@ public class AnnealData {
 
     }
 
-    public void setupConsumerRun(List<Order> orders) {
-
-        orders.forEach(order -> order.setState(Order.State.InConsumerRun));
+    public void setupRun(List<Order> orders) {
 
         Map<Supplier, List<Order>> bySupplier = orders.stream()
                 .collect(Collectors.groupingBy(order -> order.getSupplier()));

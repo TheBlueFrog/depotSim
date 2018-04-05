@@ -17,7 +17,7 @@ public class Order  {
         InBatch,
         InConsumerRun,
         Picked,
-        Delivered,
+        Delivered, InDepotRun,
     };
 
 

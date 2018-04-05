@@ -1,5 +1,7 @@
 package com.mike.sim;
 
+import java.util.List;
+
 /*
  * batch sizes have a lower limit of one order,
  * the number of stops in a batch is an upper limit
@@ -18,8 +20,11 @@ public class ConsumerRun {
     public ConsumerRun(Batch batch) {
         id = nextId++;
 
+        List<Order> orders = batch.getOrders(Order.State.InConsumerRun);
+        orders.forEach(order -> order.setState(Order.State.InConsumerRun));
+
         annealer = new AnnealData();
-        annealer.setupConsumerRun(batch.getOrders());
+        annealer.setupRun(orders);
         annealer.anneal();
     }
 
@@ -59,21 +64,5 @@ public class ConsumerRun {
         }
 
     }
-
-
-//    /** construct a set of orders for suppliers that will
-//     * satisfy out set of consumer orders
-//     *
-//     * @return
-//     */
-//    public List<Order> getSupplierOrders() {
-//        List<Order> supplierOrderss = new ArrayList<>();
-//        for (Order consumerOrder : orders) {
-//            double timeAtDepot = orders.get(0).getTime();    // before the start of the run
-//            Depot depot = sim.getDepot(consumerOrder);
-//            new Order(consumerOrder, timeAtDepot, depot);
-//        }
-//        return supplierOrderss;
-//    }
 
 }
